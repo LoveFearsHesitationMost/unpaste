@@ -105,6 +105,8 @@ const codeBlockClassName = cn(
   "[&_.shiki]:!bg-transparent",
   "[&_code]:grid",
   "[&_code]:overflow-x-auto",
+  "[&_code]:pb-3",
+  "[&_code]:-mb-3.5",
   "[&_code]:bg-transparent",
   "[&_.line]:px-4",
   "[&_.line]:w-full",

@@ -44,14 +44,14 @@ export function VisibilityBadge({
 }) {
   if (visibility === "private") {
     return (
-      <Badge variant="outline">
+      <Badge variant="secondary">
         <LockIcon />
         私密
       </Badge>
     )
   }
   return (
-    <Badge variant="secondary">
+    <Badge variant="default">
       <GlobeIcon />
       公开
     </Badge>

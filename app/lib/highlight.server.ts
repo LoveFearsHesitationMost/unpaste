@@ -79,8 +79,8 @@ const LANGUAGE_LOADERS: Record<
 
 /** 浅色 / 深色双主题，样式变量由 kibo 的 CodeBlock 消费。 */
 export const CODE_THEMES = {
-  light: "github-light",
-  dark: "github-dark-default"
+  light: "catppuccin-latte",
+  dark: "vitesse-dark"
 } as const
 
 /**
@@ -97,8 +97,8 @@ const languageLoads = new Map<string, Promise<void>>()
 function getHighlighter(): Promise<HighlighterCore> {
   return (highlighterPromise ??= createHighlighterCore({
     themes: [
-      import("@shikijs/themes/github-light"),
-      import("@shikijs/themes/github-dark-default")
+      import("@shikijs/themes/catppuccin-latte"),
+      import("@shikijs/themes/vitesse-dark")
     ],
     langs: [],
     engine: createJavaScriptRegexEngine()

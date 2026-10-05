@@ -75,7 +75,7 @@ export function SnippetViewer({
   return (
     <Tabs value={activeFile.filename} onValueChange={handleFileChange}>
       {files.length > 1 ? (
-        <TabsList className="w-full justify-start overflow-x-auto">
+        <TabsList className="w-full min-h-8 justify-start overflow-x-auto overflow-y-hidden">
           {files.map((file) => (
             <TabsTrigger
               key={file.filename}
@@ -97,7 +97,7 @@ export function SnippetViewer({
               </CodeBlockFilename>
             )}
           </CodeBlockFiles>
-          <Badge variant="secondary">{activeFile.language}</Badge>
+          <Badge variant="outline">{activeFile.language}</Badge>
           {activeFile.isMarkdown ? (
             <>
               <Button

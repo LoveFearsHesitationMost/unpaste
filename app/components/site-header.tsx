@@ -6,7 +6,8 @@ import {
   SignOutIcon,
   UserIcon
 } from "@phosphor-icons/react"
-import { Link, useFetcher } from "react-router"
+import { Link } from "react-router"
+import { SiteMenu, useLogout } from "~/components/site-menu"
 import { ThemeToggle } from "~/components/theme-toggle"
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar"
 import { Button } from "~/components/ui/button"
@@ -20,7 +21,12 @@ import {
 } from "~/components/ui/dropdown-menu"
 import type { SessionUser } from "~/context"
 
-/** 顶部导航。用户数据来自 root loader（服务端已经从 D1 会话里解析过）。 */
+/**
+ * 顶部导航。用户数据来自 root loader（服务端已经从 D1 会话里解析过）。
+ *
+ * md 以上把导航、主题、账号菜单平铺在 header 里；md 以下（手机）header 只留
+ * logo，其余元素收进右侧 Sheet（见 site-menu.tsx）——屏幕窄的时候平铺按钮既挤又难点。
+ */
 export function SiteHeader({ user }: { user: SessionUser | null }) {
   return (
     <header className="sticky top-0 z-40 border-b bg-background/85 backdrop-blur">
@@ -30,10 +36,10 @@ export function SiteHeader({ user }: { user: SessionUser | null }) {
           to="/"
         >
           <CodeIcon className="size-5" weight="bold" />
-          unpaste
+          <span className="font-mono">unpaste</span>
         </Link>
 
-        <nav className="ml-auto flex items-center gap-1">
+        <nav className="ml-auto hidden items-center gap-1 md:flex">
           <Button asChild size="sm" variant="ghost">
             <Link to="/">
               <HouseIcon data-icon="inline-start" />
@@ -70,13 +76,15 @@ export function SiteHeader({ user }: { user: SessionUser | null }) {
           <ThemeToggle />
           {user && <UserMenu user={user} />}
         </nav>
+
+        <SiteMenu user={user} />
       </div>
     </header>
   )
 }
 
 function UserMenu({ user }: { user: SessionUser }) {
-  const logout = useFetcher()
+  const logout = useLogout()
 
   return (
     <DropdownMenu>
@@ -113,11 +121,7 @@ function UserMenu({ user }: { user: SessionUser }) {
           </DropdownMenuItem>
         )}
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onSelect={() =>
-            logout.submit(null, { action: "/auth/logout", method: "post" })
-          }
-        >
+        <DropdownMenuItem onSelect={logout}>
           <SignOutIcon data-icon="inline-start" />
           退出登录
         </DropdownMenuItem>

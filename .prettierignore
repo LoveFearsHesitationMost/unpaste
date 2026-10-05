@@ -1,0 +1,12 @@
+# 构建产物 / 生成物，一律不参与格式化
+build
+.react-router
+.wrangler
+drizzle
+worker-configuration.d.ts
+
+# 脚手架附带的 agent 文档（第三方内容）
+.agents
+
+public
+package-lock.json

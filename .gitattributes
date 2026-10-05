@@ -1,0 +1,3 @@
+# 统一换行符：仓库内一律 LF（Prettier 默认 endOfLine: lf），
+# 免得 Windows 上 checkout 成 CRLF 后 format:check 直接失败。
+* text=auto eol=lf

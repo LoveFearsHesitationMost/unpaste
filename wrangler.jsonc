@@ -1,0 +1,47 @@
+/**
+ * For more details on how to configure Wrangler, refer to:
+ * https://developers.cloudflare.com/workers/wrangler/configuration/
+ */
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "unpaste",
+  "compatibility_date": "2026-10-01",
+  "main": "./workers/app.ts",
+  "vars": {
+    /**
+     * GitHub OAuth App 的 Client ID（非机密）。
+     * Client Secret 请用 `wrangler secret put GITHUB_CLIENT_SECRET` 配置，
+     * 本地开发写在 .dev.vars 里。
+     */
+    "GITHUB_CLIENT_ID": "Ov23liBW5hrVJ1RCDIR3"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "unpaste-db",
+      /**
+       * 先执行 `npm run db:create` 创建数据库，再把输出的 database_id 填到这里。
+       * 本地开发（wrangler 的 Miniflare 模拟）不校验该 ID。
+       */
+      "database_id": "3d99a0e3-2d8d-4c6e-ada4-4dceec8cf8f7",
+      /**
+       * Drizzle 生成的迁移文件由 `wrangler d1 migrations apply` 执行。
+       */
+      "migrations_dir": "drizzle"
+    }
+  ],
+  "observability": {
+    "enabled": true
+  },
+  "upload_source_maps": true
+  /**
+   * Smart Placement
+   * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
+   */
+  // "placement": {  "mode": "smart" }
+  /**
+   * Static Assets
+   * https://developers.cloudflare.com/workers/static-assets/binding/
+   */
+  // "assets": {  "directory": "./public/",  "binding": "ASSETS" }
+}

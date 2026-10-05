@@ -3,6 +3,7 @@ import {
   PencilSimpleIcon,
   TrashIcon
 } from "@phosphor-icons/react"
+import { useState } from "react"
 import { Form, Link } from "react-router"
 import type { Route } from "./+types/snippet"
 import { CopyLinkButton } from "~/components/copy-link-button"
@@ -92,6 +93,15 @@ export async function loader({ params, context }: Route.LoaderArgs) {
 
 export default function SnippetPage({ loaderData }: Route.ComponentProps) {
   const { snippet, files, canManage } = loaderData
+  const [activeFile, setActiveFile] = useState(files[0])
+
+  // 文件名可能随 loader 数据变化，取不到时回落到第一个文件，避免出现空白，
+  // 也保证“原文”链接始终指向当前标签页对应的文件。
+  const resolvedFile =
+    files.find((file) => file.filename === activeFile?.filename) ?? files[0]
+  const rawHref = resolvedFile
+    ? `/s/${snippet.slug}/raw?file=${encodeURIComponent(resolvedFile.filename)}`
+    : `/s/${snippet.slug}/raw`
 
   return (
     <div className="flex flex-col gap-5">
@@ -130,11 +140,7 @@ export default function SnippetPage({ loaderData }: Route.ComponentProps) {
           <div className="flex flex-wrap items-center gap-2">
             <CopyLinkButton />
             <Button asChild size="sm" variant="outline">
-              <a
-                href={`/s/${snippet.slug}/raw`}
-                rel="noreferrer"
-                target="_blank"
-              >
+              <a href={rawHref} rel="noreferrer" target="_blank">
                 <ArrowSquareOutIcon data-icon="inline-start" />
                 原文
               </a>
@@ -154,7 +160,11 @@ export default function SnippetPage({ loaderData }: Route.ComponentProps) {
         </div>
       </header>
 
-      <SnippetViewer files={files} />
+      <SnippetViewer
+        activeFile={resolvedFile}
+        files={files}
+        onActiveFileChange={setActiveFile}
+      />
     </div>
   )
 }

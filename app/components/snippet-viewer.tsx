@@ -34,13 +34,21 @@ type PreviewMode = "preview" | "source"
 
 type SnippetViewerProps = {
   files: ViewerFile[]
+  /**
+   * 当前展示的文件。由调用方持有，页面头部才能跟着标签页切换出正确的“原文”链接。
+   */
+  activeFile: ViewerFile | undefined
+  onActiveFileChange: (file: ViewerFile) => void
 }
 
-export function SnippetViewer({ files }: SnippetViewerProps) {
-  const [active, setActive] = useState(files[0]?.filename ?? "")
+export function SnippetViewer({
+  files,
+  activeFile,
+  onActiveFileChange
+}: SnippetViewerProps) {
   const [mode, setMode] = useState<PreviewMode>("preview")
 
-  if (files.length === 0) {
+  if (files.length === 0 || !activeFile) {
     return (
       <Empty>
         <EmptyHeader>
@@ -54,12 +62,12 @@ export function SnippetViewer({ files }: SnippetViewerProps) {
     )
   }
 
-  // 文件名可能随 loader 数据变化，取不到时回落到第一个文件，避免出现空白。
-  const activeFile = files.find((file) => file.filename === active) ?? files[0]
   const showMarkdownPreview = activeFile.isMarkdown && mode === "preview"
 
   const handleFileChange = (filename: string) => {
-    setActive(filename)
+    const next = files.find((file) => file.filename === filename)
+    if (!next) return
+    onActiveFileChange(next)
     // 换文件后回到预览态，避免沿用上一个文件留下的“源码”选择。
     setMode("preview")
   }

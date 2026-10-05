@@ -1,11 +1,15 @@
 /**
  * React Bits — PixelBlast（TypeScript + CSS 变体），源码逐行照搬自
- * https://reactbits.dev，仅做三处本仓库适配：
+ * https://reactbits.dev，仅做四处本仓库适配：
  *   1. 文件名带 `.client` 后缀：本组件依赖 three/postprocessing 与 WebGL，
  *      服务端构建会把它替换为空模块，避免把这坨代码打进 Worker 包。
  *   2. 去掉 `'use client'` 指令（React Router 无 RSC 概念，`.client` 后缀已表明归属）
  *      与 `import './PixelBlast.css'`（容器样式并入 app.css）。
  *   3. 容器改为 `aria-hidden`：纯装饰性背景，不该被读屏软件朗读。
+ *   4. 修正 `EffectComposer.setSize()` 的尺寸单位：上游传 drawing buffer（device
+ *      像素），postprocessing 按 CSS 像素理解并回写 `renderer.setSize()`，在
+ *      devicePixelRatio > 1 时把 canvas 二次放大、与 `uResolution` 失配，导致
+ *      背景大面积被 edgeFade 抹成透明（HiDPI 屏幕上肉眼几乎看不见）。
  *
  * Component inspired by github.com/zavalit/bayer-dithering-webgl-demo
  */
@@ -512,6 +516,9 @@ const PixelBlast: React.FC<PixelBlastProps> = ({
       const quad = new THREE.Mesh(quadGeom, material)
       scene.add(quad)
       const clock = new THREE.Clock()
+      let composer: EffectComposer | undefined
+      let touch: TouchTexture | undefined
+      let liquidEffect: Effect | undefined
       const setSize = () => {
         const w = container.clientWidth || 1
         const h = container.clientHeight || 1
@@ -520,12 +527,11 @@ const PixelBlast: React.FC<PixelBlastProps> = ({
           renderer.domElement.width,
           renderer.domElement.height
         )
-        if (threeRef.current?.composer)
-          threeRef.current.composer.setSize(
-            renderer.domElement.width,
-            renderer.domElement.height
-          )
         uniforms.uPixelSize.value = pixelSize * renderer.getPixelRatio()
+        // postprocessing 以 CSS 像素为准，内部再乘 pixelRatio 得到 drawing buffer。
+        // 传 device 像素会被它当成 CSS 像素，从而把 canvas 再放大 pixelRatio 倍，
+        // 与 uResolution 失配（HiDPI 下 norm 超过 1，edgeFade 把大半屏幕刷成透明）。
+        if (composer) composer.setSize(w, h, false)
       }
       setSize()
       const ro = new ResizeObserver(setSize)
@@ -539,9 +545,6 @@ const PixelBlast: React.FC<PixelBlastProps> = ({
         return Math.random()
       }
       const timeOffset = randomFloat() * 1000
-      let composer: EffectComposer | undefined
-      let touch: TouchTexture | undefined
-      let liquidEffect: Effect | undefined
       if (liquid) {
         touch = createTouchTexture()
         touch.radiusScale = liquidRadius
@@ -581,8 +584,7 @@ const PixelBlast: React.FC<PixelBlastProps> = ({
         }
         composer.addPass(noisePass)
       }
-      if (composer)
-        composer.setSize(renderer.domElement.width, renderer.domElement.height)
+      if (composer) setSize() // composer 建好后重新对齐 canvas / uResolution / 各 pass 的缓冲区
       const mapToPixels = (e: PointerEvent) => {
         const rect = renderer.domElement.getBoundingClientRect()
         const scaleX = renderer.domElement.width / rect.width

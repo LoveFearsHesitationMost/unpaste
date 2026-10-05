@@ -95,9 +95,11 @@ export default function SnippetPage({ loaderData }: Route.ComponentProps) {
 
   return (
     <div className="flex flex-col gap-5">
-      <header className="flex flex-col gap-3">
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div className="min-w-0 flex-1">
+      {/* 标题区与操作区只在内容宽度足够时并排：容器查询按可用宽度决定，
+          避免 flex-wrap 因标题可无限收缩而永远不换行、把标题挤成一列。 */}
+      <header className="@container/snippet-header">
+        <div className="flex flex-col gap-3 @4xl/snippet-header:flex-row @4xl/snippet-header:items-start @4xl/snippet-header:justify-between">
+          <div className="min-w-0 @4xl/snippet-header:flex-1">
             <h1 className="font-semibold text-xl tracking-tight">
               {snippet.title ?? "未命名 snippet"}
             </h1>

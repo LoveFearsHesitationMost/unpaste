@@ -1,4 +1,4 @@
-import { GithubLogoIcon, WarningCircleIcon } from "@phosphor-icons/react"
+import { GithubLogoIcon, SignInIcon, WarningCircleIcon } from "@phosphor-icons/react"
 import { env } from "cloudflare:workers"
 import { lazy, Suspense, useEffect, useState } from "react"
 import { redirect } from "react-router"
@@ -13,6 +13,7 @@ import {
   CardTitle
 } from "~/components/ui/card"
 import { getCurrentUser, safeRedirectTo } from "~/lib/auth.server"
+import { MAX_FILE_LENGTH, MAX_FILES_PER_SNIPPET } from "~/lib/validation"
 
 /** 回调地址是固定契约，写死在文案里，避免把服务端 config 拖进浏览器包。 */
 const CALLBACK_PATH = "/auth/github/callback"
@@ -105,14 +106,20 @@ export default function Login({ loaderData }: Route.ComponentProps) {
     : undefined
 
   return (
-    <main className="relative flex min-h-svh items-center justify-center overflow-hidden p-4">
+    <main className="relative flex min-h-[75vh] items-center justify-center overflow-hidden p-4">
       <PixelBlastBackground />
-      <Card className="relative z-10 w-full max-w-sm">
+      <Card className="relative z-10 w-full max-w-sm text-center">
         <CardHeader>
-          <CardTitle>登录 unpaste</CardTitle>
+          <SignInIcon className="mx-auto" size={32} />
+          <CardTitle className="text-lg font-semibold">登录</CardTitle>
           <CardDescription>
-            本站不维护自有账号体系，只能使用 GitHub
-            登录。登录后可以创建和管理自己的 snippet。
+            <ul>
+              <li>使用 GitHub 登录来创建和管理自己的 snippet</li>
+              <li>单文件上限 {MAX_FILE_LENGTH} 字符</li>
+              <li>单 snippet 上限 {MAX_FILES_PER_SNIPPET} 个文件</li>
+              <li>请避免滥用、遵守站点所在司法区规则</li>
+              <li>不合规 snippet 将被管理员删除</li>
+            </ul>
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">

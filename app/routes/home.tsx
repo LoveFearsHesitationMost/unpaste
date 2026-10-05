@@ -53,6 +53,9 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       <section className="flex flex-col gap-3 pt-2">
         <h1 className="font-semibold text-2xl tracking-tight">unpaste</h1>
         <p className="max-w-2xl text-muted-foreground text-sm">
+          CloudFlare Workers 原生的 pastebin 服务，简洁、公益、现代。使用
+          shadcn/ui、React Router v8、Shiki 构建。
+          <br />
           把代码或文本粘成一条带随机 slug 的链接。公开 snippet 任何人可见，私密
           snippet 只有作者本人和管理员能打开——对其他人而言，它和不存在没有区别。
         </p>

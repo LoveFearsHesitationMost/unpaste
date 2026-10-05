@@ -1,9 +1,16 @@
 "use client"
 
 import { useControllableState } from "@radix-ui/react-use-controllable-state"
-import { CheckIcon, CopyIcon } from "@phosphor-icons/react"
+import { Icon } from "@iconify/react"
+import {
+  CheckIcon,
+  CodeIcon,
+  CopyIcon,
+  TextAlignLeftIcon
+} from "@phosphor-icons/react"
 import { cn } from "~/lib/utils"
 import { Button } from "~/components/ui/button"
+import { FILENAME_ICON_MAP } from "~/lib/language"
 import type {
   ComponentProps,
   HTMLAttributes,
@@ -17,77 +24,6 @@ import {
   useContext,
   useState
 } from "react"
-import type { IconType } from "react-icons"
-import {
-  SiAstro,
-  SiBiome,
-  SiBower,
-  SiBun,
-  SiC,
-  SiCircleci,
-  SiCoffeescript,
-  SiCplusplus,
-  SiCss,
-  SiCssmodules,
-  SiDart,
-  SiDocker,
-  SiDocusaurus,
-  SiDotenv,
-  SiEditorconfig,
-  SiEslint,
-  SiGatsby,
-  SiGitignoredotio,
-  SiGnubash,
-  SiGo,
-  SiGraphql,
-  SiGrunt,
-  SiGulp,
-  SiHandlebarsdotjs,
-  SiHtml5,
-  SiJavascript,
-  SiJson,
-  SiJest,
-  SiLess,
-  SiMarkdown,
-  SiMdx,
-  SiMintlify,
-  SiMocha,
-  SiMysql,
-  SiNextdotjs,
-  SiPerl,
-  SiPhp,
-  SiPostcss,
-  SiPrettier,
-  SiPrisma,
-  SiPug,
-  SiPython,
-  SiR,
-  SiReact,
-  SiReadme,
-  SiRedis,
-  SiRemix,
-  SiRive,
-  SiRollupdotjs,
-  SiRuby,
-  SiSanity,
-  SiSass,
-  SiScala,
-  SiSentry,
-  SiShadcnui,
-  SiStorybook,
-  SiStylelint,
-  SiSublimetext,
-  SiSvelte,
-  SiSvg,
-  SiSwift,
-  SiTailwindcss,
-  SiToml,
-  SiTypescript,
-  SiVercel,
-  SiVite,
-  SiVuedotjs,
-  SiWebassembly
-} from "react-icons/si"
 
 /**
  * 取自 kibo-ui 的 code-block（https://www.kibo-ui.com/components/code-block），
@@ -95,84 +31,12 @@ import {
  *   1. 高亮在 Worker 侧完成（Shiki + JS 正则引擎，见 app/lib/highlight.server.ts），
  *      因此删掉了原组件里浏览器端的高亮逻辑；
  *   2. 文件数据直接携带渲染好的 HTML；
- *   3. 图标统一换成 Phosphor（与全站一致）。
+ *   3. 图标改用 Iconify（品牌图标）+ Phosphor（通用回退），见
+ *      app/lib/language.ts 的 FILENAME_ICON_MAP。
  */
 
-const filenameIconMap = {
-  ".env": SiDotenv,
-  "*.astro": SiAstro,
-  "biome.json": SiBiome,
-  ".bowerrc": SiBower,
-  "bun.lockb": SiBun,
-  "*.c": SiC,
-  "*.cpp": SiCplusplus,
-  ".circleci/config.yml": SiCircleci,
-  "*.coffee": SiCoffeescript,
-  "*.module.css": SiCssmodules,
-  "*.css": SiCss,
-  "*.dart": SiDart,
-  Dockerfile: SiDocker,
-  "docusaurus.config.js": SiDocusaurus,
-  ".editorconfig": SiEditorconfig,
-  ".eslintrc": SiEslint,
-  "eslint.config.*": SiEslint,
-  "gatsby-config.*": SiGatsby,
-  ".gitignore": SiGitignoredotio,
-  "*.go": SiGo,
-  "*.graphql": SiGraphql,
-  "*.sh": SiGnubash,
-  "Gruntfile.*": SiGrunt,
-  "gulpfile.*": SiGulp,
-  "*.hbs": SiHandlebarsdotjs,
-  "*.html": SiHtml5,
-  "*.js": SiJavascript,
-  "*.json": SiJson,
-  "*.test.js": SiJest,
-  "*.less": SiLess,
-  "*.md": SiMarkdown,
-  "*.mdx": SiMdx,
-  "mintlify.json": SiMintlify,
-  "mocha.opts": SiMocha,
-  "*.mustache": SiHandlebarsdotjs,
-  "*.sql": SiMysql,
-  "next.config.*": SiNextdotjs,
-  "*.pl": SiPerl,
-  "*.php": SiPhp,
-  "postcss.config.*": SiPostcss,
-  "prettier.config.*": SiPrettier,
-  "*.prisma": SiPrisma,
-  "*.pug": SiPug,
-  "*.py": SiPython,
-  "*.r": SiR,
-  "*.rb": SiRuby,
-  "*.jsx": SiReact,
-  "*.tsx": SiReact,
-  "readme.md": SiReadme,
-  "*.rdb": SiRedis,
-  "remix.config.*": SiRemix,
-  "*.riv": SiRive,
-  "rollup.config.*": SiRollupdotjs,
-  "sanity.config.*": SiSanity,
-  "*.sass": SiSass,
-  "*.scss": SiSass,
-  "*.sc": SiScala,
-  "*.scala": SiScala,
-  "sentry.client.config.*": SiSentry,
-  "components.json": SiShadcnui,
-  "storybook.config.*": SiStorybook,
-  "stylelint.config.*": SiStylelint,
-  ".sublime-settings": SiSublimetext,
-  "*.svelte": SiSvelte,
-  "*.svg": SiSvg,
-  "*.swift": SiSwift,
-  "tailwind.config.*": SiTailwindcss,
-  "*.toml": SiToml,
-  "*.ts": SiTypescript,
-  "vercel.json": SiVercel,
-  "vite.config.*": SiVite,
-  "*.vue": SiVuedotjs,
-  "*.wasm": SiWebassembly
-}
+/** 文件标签图标的统一尺寸，品牌图标与 Phosphor 回退保持一致。 */
+const filenameIconClassName = "h-4 w-4 shrink-0"
 
 const lineNumberClassNames = cn(
   "[&_code]:[counter-reset:line]",
@@ -341,7 +205,8 @@ export const CodeBlockFiles = ({
 }
 
 export type CodeBlockFilenameProps = HTMLAttributes<HTMLDivElement> & {
-  icon?: IconType
+  /** Iconify 图标名，例如 `simple-icons:php`；省略时按 detectLanguage 自动推断。 */
+  icon?: string
   value?: string
 }
 
@@ -353,17 +218,23 @@ export const CodeBlockFilename = ({
   ...props
 }: CodeBlockFilenameProps) => {
   const { value: activeValue } = useContext(CodeBlockContext)
-  const defaultIcon = Object.entries(filenameIconMap).find(([pattern]) => {
-    const regex = new RegExp(
-      `^${pattern.replace(/\\/g, "\\\\").replace(/\./g, "\\.").replace(/\*/g, ".*")}$`
-    )
-    return regex.test(children as string)
-  })?.[1]
-  const Icon = icon ?? defaultIcon
 
   if (value !== activeValue) {
     return null
   }
+
+  const filename = children as string
+  // 解析顺序：.txt → 文件名模式 → Phosphor 通用图标。
+  const isPlainText = filename.trim().toLowerCase().endsWith(".txt")
+  const filenameIcon = isPlainText
+    ? undefined
+    : Object.entries(FILENAME_ICON_MAP).find(([pattern]) => {
+        const regex = new RegExp(
+          `^${pattern.replace(/\\/g, "\\\\").replace(/\./g, "\\.").replace(/\*/g, ".*")}$`
+        )
+        return regex.test(filename)
+      })?.[1]
+  const iconName = icon ?? filenameIcon
 
   return (
     <div
@@ -373,7 +244,13 @@ export const CodeBlockFilename = ({
       )}
       {...props}
     >
-      {Icon && <Icon className="h-4 w-4 shrink-0" />}
+      {iconName ? (
+        <Icon className={filenameIconClassName} icon={iconName} />
+      ) : isPlainText ? (
+        <TextAlignLeftIcon className={filenameIconClassName} />
+      ) : (
+        <CodeIcon className={filenameIconClassName} />
+      )}
       <span className="flex-1 truncate">{children}</span>
     </div>
   )

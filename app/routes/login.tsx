@@ -1,4 +1,8 @@
-import { GithubLogoIcon, SignInIcon, WarningCircleIcon } from "@phosphor-icons/react"
+import {
+  GithubLogoIcon,
+  SignInIcon,
+  WarningCircleIcon
+} from "@phosphor-icons/react"
 import { env } from "cloudflare:workers"
 import { lazy, Suspense, useEffect, useState } from "react"
 import { redirect } from "react-router"
@@ -123,13 +127,17 @@ export default function Login({ loaderData }: Route.ComponentProps) {
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
-          <Button asChild className="w-full">
-            <a
-              href={`/auth/github?redirectTo=${encodeURIComponent(redirectTo)}`}
-            >
-              <GithubLogoIcon data-icon="inline-start" />
-              使用 GitHub 登录
-            </a>
+          <Button
+            className="w-full"
+            nativeButton={false}
+            render={
+              <a
+                href={`/auth/github?redirectTo=${encodeURIComponent(redirectTo)}`}
+              />
+            }
+          >
+            <GithubLogoIcon data-icon="inline-start" />
+            使用 GitHub 登录
           </Button>
 
           {errorMessage ? (

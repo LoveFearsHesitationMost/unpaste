@@ -60,11 +60,14 @@ export default function Admin({ loaderData }: Route.ComponentProps) {
         {items.map((snippet) => (
           <SnippetCard
             actions={
-              <Button asChild size="sm" variant="ghost">
-                <Link to={`/s/${snippet.slug}/edit`}>
-                  <PencilSimpleIcon data-icon="inline-start" />
-                  编辑
-                </Link>
+              <Button
+                nativeButton={false}
+                render={<Link to={`/s/${snippet.slug}/edit`} />}
+                size="sm"
+                variant="ghost"
+              >
+                <PencilSimpleIcon data-icon="inline-start" />
+                编辑
               </Button>
             }
             key={snippet.slug}

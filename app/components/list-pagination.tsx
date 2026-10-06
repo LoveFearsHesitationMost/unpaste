@@ -17,11 +17,14 @@ export function ListPagination({
   return (
     <div className="flex items-center justify-between pt-2">
       {page > 1 ? (
-        <Button asChild size="sm" variant="outline">
-          <Link to={`${basePath}?page=${page - 1}`}>
-            <CaretLeftIcon data-icon="inline-start" />
-            上一页
-          </Link>
+        <Button
+          nativeButton={false}
+          render={<Link to={`${basePath}?page=${page - 1}`} />}
+          size="sm"
+          variant="outline"
+        >
+          <CaretLeftIcon data-icon="inline-start" />
+          上一页
         </Button>
       ) : (
         <Button disabled size="sm" variant="outline">
@@ -35,11 +38,14 @@ export function ListPagination({
       </span>
 
       {page < pageCount ? (
-        <Button asChild size="sm" variant="outline">
-          <Link to={`${basePath}?page=${page + 1}`}>
-            下一页
-            <CaretRightIcon data-icon="inline-end" />
-          </Link>
+        <Button
+          nativeButton={false}
+          render={<Link to={`${basePath}?page=${page + 1}`} />}
+          size="sm"
+          variant="outline"
+        >
+          下一页
+          <CaretRightIcon data-icon="inline-end" />
         </Button>
       ) : (
         <Button disabled size="sm" variant="outline">

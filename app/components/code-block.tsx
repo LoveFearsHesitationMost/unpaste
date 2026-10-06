@@ -1,6 +1,5 @@
 "use client"
 
-import { useControllableState } from "@radix-ui/react-use-controllable-state"
 import { Icon } from "@iconify/react"
 import {
   CheckIcon,
@@ -11,28 +10,19 @@ import {
 import { cn } from "~/lib/utils"
 import { Button } from "~/components/ui/button"
 import { FILENAME_ICON_MAP } from "~/lib/language"
-import type {
-  ComponentProps,
-  HTMLAttributes,
-  ReactElement,
-  ReactNode
-} from "react"
-import {
-  cloneElement,
-  createContext,
-  Fragment,
-  useContext,
-  useState
-} from "react"
+import type { ComponentProps, HTMLAttributes, ReactNode } from "react"
+import { createContext, Fragment, useContext, useState } from "react"
 
 /**
  * 取自 kibo-ui 的 code-block（https://www.kibo-ui.com/components/code-block），
- * 按本站需要做了三处裁剪：
+ * 按本站需要做了四处裁剪：
  *   1. 高亮在 Worker 侧完成（Shiki + JS 正则引擎，见 app/lib/highlight.server.ts），
  *      因此删掉了原组件里浏览器端的高亮逻辑；
  *   2. 文件数据直接携带渲染好的 HTML；
  *   3. 图标改用 Iconify（品牌图标）+ Phosphor（通用回退），见
- *      app/lib/language.ts 的 FILENAME_ICON_MAP。
+ *      app/lib/language.ts 的 FILENAME_ICON_MAP；
+ *   4. 受控状态自己用 useState 维护（原组件依赖 @radix-ui/react-use-controllable-state），
+ *      复制按钮的多态交给 Button 自身的 render 属性，不再 cloneElement。
  */
 
 /** 文件标签图标的统一尺寸，品牌图标与 Phosphor 回退保持一致。 */
@@ -149,11 +139,14 @@ export const CodeBlock = ({
   data,
   ...props
 }: CodeBlockProps) => {
-  const [value, onValueChange] = useControllableState({
-    defaultProp: defaultValue ?? "",
-    prop: controlledValue,
-    onChange: controlledOnValueChange
-  })
+  // 受控/非受控二选一：传了 value 就完全听调用方的，否则自己存一份。
+  const [uncontrolledValue, setUncontrolledValue] = useState(defaultValue ?? "")
+  const value = controlledValue ?? uncontrolledValue
+
+  const onValueChange = (nextValue: string) => {
+    if (controlledValue === undefined) setUncontrolledValue(nextValue)
+    controlledOnValueChange?.(nextValue)
+  }
 
   return (
     <CodeBlockContext.Provider value={{ value, onValueChange, data }}>
@@ -264,8 +257,9 @@ export type CodeBlockCopyButtonProps = ComponentProps<typeof Button> & {
   timeout?: number
 }
 
+// 需要换成非 button 元素时，把元素交给 Button 自己的 render 属性
+// （<CodeBlockCopyButton render={<a href="…" />} />），不再用 asChild + cloneElement。
 export const CodeBlockCopyButton = ({
-  asChild,
   onCopy,
   onError,
   timeout = 2000,
@@ -292,13 +286,6 @@ export const CodeBlockCopyButton = ({
 
       setTimeout(() => setIsCopied(false), timeout)
     }, onError)
-  }
-
-  if (asChild) {
-    return cloneElement(children as ReactElement, {
-      // @ts-expect-error - we know this is a button
-      onClick: copyToClipboard
-    })
   }
 
   const Icon = isCopied ? CheckIcon : CopyIcon

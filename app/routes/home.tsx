@@ -60,11 +60,9 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           snippet 只有作者本人和管理员能打开——对其他人而言，它和不存在没有区别。
         </p>
         <div className="flex items-center gap-2">
-          <Button asChild>
-            <Link to="/new">
-              <PlusIcon data-icon="inline-start" />
-              新建 snippet
-            </Link>
+          <Button nativeButton={false} render={<Link to="/new" />}>
+            <PlusIcon data-icon="inline-start" />
+            新建 snippet
           </Button>
         </div>
       </section>
@@ -85,8 +83,13 @@ export default function Home({ loaderData }: Route.ComponentProps) {
               <EmptyDescription>成为第一个分享代码的人。</EmptyDescription>
             </EmptyHeader>
             <EmptyContent>
-              <Button asChild size="sm" variant="outline">
-                <Link to="/new">新建 snippet</Link>
+              <Button
+                nativeButton={false}
+                render={<Link to="/new" />}
+                size="sm"
+                variant="outline"
+              >
+                新建 snippet
               </Button>
             </EmptyContent>
           </Empty>

@@ -7,7 +7,8 @@ import {
   UserIcon
 } from "@phosphor-icons/react"
 import { Link } from "react-router"
-import { SiteMenu, useLogout } from "~/components/site-menu"
+import { SiteMenu } from "~/components/site-menu"
+import { useLogout } from "~/components/use-logout"
 import { ThemeToggle } from "~/components/theme-toggle"
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar"
 import { Button } from "~/components/ui/button"

@@ -8,8 +8,9 @@ import {
   UserIcon,
   type Icon
 } from "@phosphor-icons/react"
-import { Link, useFetcher } from "react-router"
+import { Link } from "react-router"
 import { ThemeToggle } from "~/components/theme-toggle"
+import { useLogout } from "~/components/use-logout"
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar"
 import { Button } from "~/components/ui/button"
 import { Separator } from "~/components/ui/separator"
@@ -23,12 +24,6 @@ import {
   SheetTrigger
 } from "~/components/ui/sheet"
 import type { SessionUser } from "~/context"
-
-/** 退出登录：桌面 Dropdown（site-header.tsx）与这里的移动端菜单共用，免得两处各写一遍 submit。 */
-export function useLogout() {
-  const logout = useFetcher()
-  return () => logout.submit(null, { action: "/auth/logout", method: "post" })
-}
 
 /**
  * 移动端菜单：md 以下 header 只留 logo，导航、主题切换与账号操作全部收进右侧 Sheet。

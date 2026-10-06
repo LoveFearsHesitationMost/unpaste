@@ -79,7 +79,10 @@ export default function EditSnippet({
         </Button>
       </div>
 
+      {/* slug 作为 key：同一路由内切换到另一条 snippet 时强制重挂，
+          否则 useState 初值只在首次挂载生效，表单会残留上一条的内容。 */}
       <SnippetEditor
+        key={snippet.slug}
         errors={actionData?.errors}
         initial={{
           title: snippet.title,

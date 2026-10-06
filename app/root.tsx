@@ -9,7 +9,7 @@ import {
   useRouteError
 } from "react-router"
 import { ThemeProvider } from "next-themes"
-import { WarningCircleIcon } from "@phosphor-icons/react"
+import { CodeIcon, WarningCircleIcon } from "@phosphor-icons/react"
 import type { Route } from "./+types/root"
 import "./app.css"
 import { SiteHeader } from "~/components/site-header"
@@ -98,8 +98,12 @@ export function ErrorBoundary() {
     <div className="flex min-h-svh flex-col">
       <header className="border-b">
         <div className="mx-auto flex h-14 w-full max-w-5xl items-center px-4">
-          <Link className="font-semibold tracking-tight" to="/">
-            unpaste
+          <Link
+            className="flex items-center gap-2 font-semibold tracking-tight"
+            to="/"
+          >
+            <CodeIcon className="size-5" weight="bold" />
+            <span className="font-mono">unpaste</span>
           </Link>
         </div>
       </header>

@@ -16,7 +16,7 @@
   浅色/深色双主题，兼容 kibo-ui 的 CodeBlock 行号与复制按钮。
 - **Markdown 富文本预览**：`.md/.markdown/.mdx/.mdc` 文件可切换「预览 / 源码」，
   使用 react-markdown + remark-gfm（不渲染原始 HTML，天然免疫粘贴内容里的 XSS）。
-- **shadcn/ui + kibo-ui + Phosphor 图标**：Tailwind v4 语义色 + 深浅色主题。
+- **shadcn/ui（Base UI 预设）+ Phosphor 图标**：Tailwind v4 语义色 + 深浅色主题。
 - ESLint 9 扁平配置（TS + React + Hooks + JSX 规则）与 Prettier 统一代码风格。
 
 ## 技术栈
@@ -28,7 +28,7 @@
 | 数据库 / ORM | Cloudflare D1 + Drizzle ORM（`drizzle-kit` 生成迁移，`wrangler` 执行）                                        |
 | 鉴权         | GitHub OAuth（openid-client 6；GitHub 不是 OIDC Provider，故手工提供端点元数据）+ D1 会话表 + HttpOnly cookie |
 | 时间处理     | date-fns 4 + `@date-fns/utc`（中文 locale；服务端计算并格式化，杜绝 hydration 漂移）                          |
-| UI           | Tailwind CSS v4、shadcn/ui（`radix-lyra` 预设 + Phosphor 图标）、kibo-ui（code-block）                        |
+| UI           | Tailwind CSS v4、shadcn/ui（`base-lyra` 预设 = Base UI + Phosphor 图标）、code-block（源自 kibo-ui）          |
 | 背景动效     | React Bits PixelBlast（`three` + `postprocessing`，仅登录页，`.client` 模块懒加载）                           |
 | 高亮 / 渲染  | Shiki（JS engine）、react-markdown + remark-gfm                                                               |
 
@@ -70,7 +70,7 @@ app/
     format.ts               date-fns 时间格式化/本地化/计算 + 体积格式化
   components/               site-header、snippet-card、snippet-viewer、snippet-editor…
   components/ui/            shadcn/ui 组件
-  components/kibo-ui/       kibo-ui code-block（裁剪掉浏览器端高亮，改为消费服务端 HTML）
+  components/code-block.tsx 基于 kibo-ui 的 CodeBlock（裁剪掉浏览器端高亮，改为消费服务端 HTML）
 drizzle/                    drizzle-kit 生成的 SQL 迁移
 workers/
   app.ts                    Worker 入口

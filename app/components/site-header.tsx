@@ -14,6 +14,7 @@ import { Button } from "~/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -40,36 +41,54 @@ export function SiteHeader({ user }: { user: SessionUser | null }) {
         </Link>
 
         <nav className="ml-auto hidden items-center gap-1 md:flex">
-          <Button asChild size="sm" variant="ghost">
-            <Link to="/">
-              <HouseIcon data-icon="inline-start" />
-              首页
-            </Link>
+          <Button
+            nativeButton={false}
+            render={<Link to="/" />}
+            size="sm"
+            variant="ghost"
+          >
+            <HouseIcon data-icon="inline-start" />
+            首页
           </Button>
 
           {user ? (
             <>
-              <Button asChild size="sm" variant="ghost">
-                <Link to="/new">
-                  <PlusIcon data-icon="inline-start" />
-                  新建
-                </Link>
+              <Button
+                nativeButton={false}
+                render={<Link to="/new" />}
+                size="sm"
+                variant="ghost"
+              >
+                <PlusIcon data-icon="inline-start" />
+                新建
               </Button>
-              <Button asChild size="sm" variant="ghost">
-                <Link to="/my">我的</Link>
+              <Button
+                nativeButton={false}
+                render={<Link to="/my" />}
+                size="sm"
+                variant="ghost"
+              >
+                我的
               </Button>
               {user.isAdmin && (
-                <Button asChild size="sm" variant="ghost">
-                  <Link to="/admin">
-                    <ShieldCheckIcon data-icon="inline-start" />
-                    管理
-                  </Link>
+                <Button
+                  nativeButton={false}
+                  render={<Link to="/admin" />}
+                  size="sm"
+                  variant="ghost"
+                >
+                  <ShieldCheckIcon data-icon="inline-start" />
+                  管理
                 </Button>
               )}
             </>
           ) : (
-            <Button asChild size="sm">
-              <Link to="/login">登录</Link>
+            <Button
+              nativeButton={false}
+              render={<Link to="/login" />}
+              size="sm"
+            >
+              登录
             </Button>
           )}
 
@@ -88,40 +107,39 @@ function UserMenu({ user }: { user: SessionUser }) {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button aria-label="账号菜单" size="icon-sm" variant="ghost">
-          <Avatar size="sm">
-            {user.avatarUrl && (
-              <AvatarImage alt={user.login} src={user.avatarUrl} />
-            )}
-            <AvatarFallback>
-              {user.login.slice(0, 1).toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
-        </Button>
+      <DropdownMenuTrigger
+        render={<Button aria-label="账号菜单" size="icon-sm" variant="ghost" />}
+      >
+        <Avatar size="sm">
+          {user.avatarUrl && (
+            <AvatarImage alt={user.login} src={user.avatarUrl} />
+          )}
+          <AvatarFallback>
+            {user.login.slice(0, 1).toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuLabel className="flex flex-col gap-0.5">
-          <span className="font-medium">{user.name ?? user.login}</span>
-          <span className="text-muted-foreground text-xs">@{user.login}</span>
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link to="/my">
+        {/* Base UI 的 GroupLabel 必须挂在 Group 里（Radix 的 Label 可以自由摆放）。 */}
+        <DropdownMenuGroup>
+          <DropdownMenuLabel className="flex flex-col gap-0.5">
+            <span className="font-medium">{user.name ?? user.login}</span>
+            <span className="text-muted-foreground text-xs">@{user.login}</span>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem render={<Link to="/my" />}>
             <UserIcon data-icon="inline-start" />
             我的 snippet
-          </Link>
-        </DropdownMenuItem>
-        {user.isAdmin && (
-          <DropdownMenuItem asChild>
-            <Link to="/admin">
+          </DropdownMenuItem>
+          {user.isAdmin && (
+            <DropdownMenuItem render={<Link to="/admin" />}>
               <ShieldCheckIcon data-icon="inline-start" />
               全局管理
-            </Link>
-          </DropdownMenuItem>
-        )}
+            </DropdownMenuItem>
+          )}
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onSelect={logout}>
+        <DropdownMenuItem onClick={logout}>
           <SignOutIcon data-icon="inline-start" />
           退出登录
         </DropdownMenuItem>

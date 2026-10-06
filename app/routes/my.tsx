@@ -82,11 +82,9 @@ export default function MySnippets({ loaderData }: Route.ComponentProps) {
               GitHub ID {user.id} · 共 {total} 条 snippet
             </div>
           </div>
-          <Button asChild size="sm">
-            <Link to="/new">
-              <PlusIcon data-icon="inline-start" />
-              新建
-            </Link>
+          <Button nativeButton={false} render={<Link to="/new" />} size="sm">
+            <PlusIcon data-icon="inline-start" />
+            新建
           </Button>
         </CardContent>
       </Card>
@@ -106,8 +104,13 @@ export default function MySnippets({ loaderData }: Route.ComponentProps) {
               </EmptyDescription>
             </EmptyHeader>
             <EmptyContent>
-              <Button asChild size="sm" variant="outline">
-                <Link to="/new">新建 snippet</Link>
+              <Button
+                nativeButton={false}
+                render={<Link to="/new" />}
+                size="sm"
+                variant="outline"
+              >
+                新建 snippet
               </Button>
             </EmptyContent>
           </Empty>
@@ -116,11 +119,14 @@ export default function MySnippets({ loaderData }: Route.ComponentProps) {
             {items.map((snippet) => (
               <SnippetCard
                 actions={
-                  <Button asChild size="sm" variant="ghost">
-                    <Link to={`/s/${snippet.slug}/edit`}>
-                      <PencilSimpleIcon data-icon="inline-start" />
-                      编辑
-                    </Link>
+                  <Button
+                    nativeButton={false}
+                    render={<Link to={`/s/${snippet.slug}/edit`} />}
+                    size="sm"
+                    variant="ghost"
+                  >
+                    <PencilSimpleIcon data-icon="inline-start" />
+                    编辑
                   </Button>
                 }
                 key={snippet.slug}

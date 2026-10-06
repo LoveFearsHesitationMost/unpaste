@@ -115,8 +115,8 @@ export function ErrorBoundary() {
             <EmptyDescription>{detail}</EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
-            <Button asChild>
-              <Link to="/">回到首页</Link>
+            <Button nativeButton={false} render={<Link to="/" />}>
+              回到首页
             </Button>
           </EmptyContent>
         </Empty>

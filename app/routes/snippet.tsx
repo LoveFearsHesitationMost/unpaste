@@ -139,19 +139,25 @@ export default function SnippetPage({ loaderData }: Route.ComponentProps) {
 
           <div className="flex flex-wrap items-center gap-2">
             <CopyLinkButton />
-            <Button asChild size="sm" variant="outline">
-              <a href={rawHref} rel="noreferrer" target="_blank">
-                <ArrowSquareOutIcon data-icon="inline-start" />
-                原文
-              </a>
+            <Button
+              nativeButton={false}
+              render={<a href={rawHref} rel="noreferrer" target="_blank" />}
+              size="sm"
+              variant="outline"
+            >
+              <ArrowSquareOutIcon data-icon="inline-start" />
+              原文
             </Button>
             {canManage && (
               <>
-                <Button asChild size="sm" variant="outline">
-                  <Link to={`/s/${snippet.slug}/edit`}>
-                    <PencilSimpleIcon data-icon="inline-start" />
-                    编辑
-                  </Link>
+                <Button
+                  nativeButton={false}
+                  render={<Link to={`/s/${snippet.slug}/edit`} />}
+                  size="sm"
+                  variant="outline"
+                >
+                  <PencilSimpleIcon data-icon="inline-start" />
+                  编辑
                 </Button>
                 <DeleteSnippetButton slug={snippet.slug} />
               </>
@@ -172,11 +178,9 @@ export default function SnippetPage({ loaderData }: Route.ComponentProps) {
 function DeleteSnippetButton({ slug }: { slug: string }) {
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button size="sm" variant="destructive">
-          <TrashIcon data-icon="inline-start" />
-          删除
-        </Button>
+      <AlertDialogTrigger render={<Button size="sm" variant="destructive" />}>
+        <TrashIcon data-icon="inline-start" />
+        删除
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

@@ -8,7 +8,7 @@ import {
   CodeBlockFiles,
   CodeBlockHeader,
   CodeBlockItem
-} from "~/components/kibo-ui/code-block"
+} from "~/components/code-block"
 import { MarkdownPreview } from "~/components/markdown-preview"
 import { Badge } from "~/components/ui/badge"
 import { Button } from "~/components/ui/button"

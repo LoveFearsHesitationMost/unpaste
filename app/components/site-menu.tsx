@@ -41,15 +41,17 @@ export function SiteMenu({ user }: { user: SessionUser | null }) {
 
   return (
     <Sheet>
-      <SheetTrigger asChild>
-        <Button
-          aria-label="打开菜单"
-          className="ml-auto md:hidden"
-          size="icon-sm"
-          variant="ghost"
-        >
-          <ListIcon />
-        </Button>
+      <SheetTrigger
+        render={
+          <Button
+            aria-label="打开菜单"
+            className="ml-auto md:hidden"
+            size="icon-sm"
+            variant="ghost"
+          />
+        }
+      >
+        <ListIcon />
       </SheetTrigger>
       <SheetContent side="right">
         {/* 可见标题与右上角关闭按钮同排，正文才不会被关闭按钮压住。 */}
@@ -81,10 +83,10 @@ export function SiteMenu({ user }: { user: SessionUser | null }) {
               </div>
             </div>
           ) : (
-              <div className="px-1">
-                <div className="text-lg font-medium font-mono">unpaste</div>
-                <p>CloudFlare Workers 原生的 pastebin 服务，简洁、公益、现代</p>
-              </div>
+            <div className="px-1">
+              <div className="text-lg font-medium font-mono">unpaste</div>
+              <p>CloudFlare Workers 原生的 pastebin 服务，简洁、公益、现代</p>
+            </div>
           )}
 
           <Separator />
@@ -127,16 +129,18 @@ export function SiteMenu({ user }: { user: SessionUser | null }) {
               <Separator />
               <nav aria-label="账号" className="flex flex-col gap-1">
                 <MenuGroupLabel>账号</MenuGroupLabel>
-                <SheetClose asChild>
-                  <Button
-                    className="w-full justify-start gap-2"
-                    onClick={logout}
-                    size="lg"
-                    variant="ghost"
-                  >
-                    <SignOutIcon data-icon="inline-start" />
-                    退出登录
-                  </Button>
+                <SheetClose
+                  render={
+                    <Button
+                      className="w-full justify-start gap-2"
+                      onClick={logout}
+                      size="lg"
+                      variant="ghost"
+                    />
+                  }
+                >
+                  <SignOutIcon data-icon="inline-start" />
+                  退出登录
                 </SheetClose>
               </nav>
             </>
@@ -167,18 +171,20 @@ function MenuLink({
   to: string
 }) {
   return (
-    <SheetClose asChild>
-      <Button
-        asChild
-        className="w-full justify-start gap-2"
-        size="lg"
-        variant="ghost"
-      >
-        <Link to={to}>
-          <Icon data-icon="inline-start" />
-          {children}
-        </Link>
-      </Button>
+    <SheetClose
+      nativeButton={false}
+      render={
+        <Button
+          className="w-full justify-start gap-2"
+          nativeButton={false}
+          render={<Link to={to} />}
+          size="lg"
+          variant="ghost"
+        />
+      }
+    >
+      <Icon data-icon="inline-start" />
+      {children}
     </SheetClose>
   )
 }

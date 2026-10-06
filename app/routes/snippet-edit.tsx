@@ -69,8 +69,13 @@ export default function EditSnippet({
             /s/{snippet.slug}
           </p>
         </div>
-        <Button asChild size="sm" variant="outline">
-          <Link to={`/s/${snippet.slug}`}>取消</Link>
+        <Button
+          nativeButton={false}
+          render={<Link to={`/s/${snippet.slug}`} />}
+          size="sm"
+          variant="outline"
+        >
+          取消
         </Button>
       </div>
 
